@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct cvor
+{
+  int val;
+  struct cvor *p;
+
+};
+
+void dodaj(struct cvor **lista, int val)
+{
+    struct cvor *nc=(struct cvor*)malloc(sizeof(struct cvor));
+    nc->val=val;
+    nc->p=*lista;
+    *lista=nc;
+
+};
+
+void ispis(struct cvor *lista)
+{
+    while(lista)
+    {
+        printf("%d ",lista->val);
+        lista=lista->p;
+    }
+}
+
+
+int main()
+{
+  int x;
+  struct cvor *lista=NULL;
+  scanf("%d",&x);
+  while(x)
+  {
+    dodaj(&lista,x);
+    scanf("%d",&x);
+  }
+
+  ispis(lista);
+
+  return 0;
+}
