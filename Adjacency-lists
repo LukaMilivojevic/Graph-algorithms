@@ -29,16 +29,20 @@ void ispis(struct cvor *lista)
 
 int main()
 {
-  int x;
-  struct cvor *lista=NULL;
-  scanf("%d",&x);
-  while(x)
+  int n,m,x,y;
+  scanf("%d%d",&n,&m);
+  struct cvor **lista = (struct cvor *)calloc(n, sizeof(struct cvor *));
+
+  for(int i=0; i<m; i++)
   {
-    dodaj(&lista,x);
-    scanf("%d",&x);
+    scanf("%d%d",&x,&y); //Usmeren bestezinski graf
+    dodaj(&lista[x],y);
   }
 
-  ispis(lista);
-
-  return 0;
+  for(int i=0; i<n; i++)
+  {
+     printf("Susedi od cvora %d: ", i);
+     ispis(lista[i]);
+     putchar('\n');
+  }
 }
