@@ -33,4 +33,18 @@ int main()
   add_edge(lista, a, b);
  }
  display_list(lista,v);
+ int brojac=0;
+ int niz[v];
+ 
+ list<int> :: iterator it;
+for(int i = 0; i<v; i++) {
+ for(it=lista[i].begin(); it!=lista[i].end(); ++it){
+         brojac++;
+ }
+  niz[i]=brojac;
+  brojac=0;
+}
+for(int i=0; i<v; i++ ){
+    cout << (niz[i]);
+}
 }
