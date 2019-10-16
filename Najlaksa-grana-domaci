@@ -4,28 +4,10 @@
 #include <list>
 #include <iterator>
 using namespace std;
-void display_list(list<pair<int,int>> adj_list[], int v){
-    int vertice;
-    int u;
-    for(int i = 0; i<v; i++) {
-      cout << i << "--->";
-      list<pair<int,int>> :: iterator it;
-      for(it=adj_list[i].begin(); it!=adj_list[i].end(); ++it){
-        vertice = it->first;
-        u = it->second;
-        cout << vertice << " ";
-        cout << u << " ";
-     }
-     cout << endl;
-   }
-}
-/*
-void add_edge(list<int> adj_list[],int a, int b){
-    adj_list[a].push_back(b);
-    adj_list[b].push_back(a);
-}*/
 
-void add_edge(list<pair<int, int>> adj_list[], int a, int b, int w){
+// Izbacio sam ispis celog grafa posto se ne trazi u zadatku.
+
+void add_edge(list<pair<int, int>> adj_list[], int a, int b, int w){  //dodavanje grana
      adj_list[a].push_back(make_pair(b,w));
      adj_list[b].push_back(make_pair(a,w));
 }
@@ -33,36 +15,56 @@ void add_edge(list<pair<int, int>> adj_list[], int a, int b, int w){
 
 int main()
 {
- int u,vertices,a,b,w;
+ 
+ int edges,vertices,a,b,w,min,vertice1,vertice2,brojac;
+
  cout << "Unesi broj cvorova: ";
  cin >> vertices;
+ 
  list<pair<int,int>> lista[vertices];
  list<pair<int,int>> :: iterator it;
+ 
  cout << "Unesi broj grana: ";
- cin >> u;
- for(int i=0; i<u; i++ ){
-  cin >> a;
-  cin >> b;
-  cin >> w;
-  add_edge(lista, a, b, w);
+ cin >> edges;
+ 
+  for(int i=0; i<edges; i++ ){
+    cin >> a;
+    cin >> b;
+    cin >> w;
+    add_edge(lista, a, b, w);
  }
- it = lista[0].begin();
- int min = it->second;
- int vertice1;
- int vertice2;
- cout << "Pocetni minimum " << min; 
- cout << endl;
-for(int i = 0; i<vertices; i++) {
- for(it=lista[i].begin(); it!=lista[i].end(); ++it){  
-         if(it->second < min){
+
+brojac = 0;
+int niz[vertices];
+
+for(int i = 0; i<vertices; i++) {                       //brojanje susednih cvorova 
+    for(it=lista[i].begin(); it!=lista[i].end(); ++it){
+         brojac++;
+       }
+  niz[i]=brojac;
+  brojac=0;
+}
+
+for(int i = 0; i<vertices; i++) {   // uzimamo prvu vrednost na koju naidjemo u grafu (ukoliko je niz[i] 0 znaci da cvor nije povezan ni sa jednim drugim dakle ne postoji grana, ovako se izbegava uzimanje random vrednosti ukoliko cvor nije povezan sa nekim drugim)
+    if(niz[i]!=0){
+        it = lista[i].begin();
+        min = it->second;
+        break;
+    }
+}
+
+for(int i = 0; i<vertices; i++) {                         
+  for(it=lista[i].begin(); it!=lista[i].end(); ++it){  // Ukoliko postoje dve najkrace grane, bice ispisana jedna
+         if(it->second <= min){
              min=it->second;
              vertice1 = i;
              vertice2 = it->first;
          }
  }
-}
-cout << "Tezina najlakse grane je: " << min;
+} 
+
+cout << "Tezina najlakse grane je: " << min;  //ispis
 cout << endl;
-cout << "Grana se nalazi izmedju cvorova: " << vertice1 << " " << vertice2;   
+cout << "Grana se nalazi izmedju cvorova: " << vertice1 << " i " << vertice2;    
     
 }
