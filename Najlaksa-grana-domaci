@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <iostream>
+#include <stdlib.h>
+#include <list>
+#include <iterator>
+using namespace std;
+void display_list(list<pair<int,int>> adj_list[], int v){
+    int vertice;
+    int u;
+    for(int i = 0; i<v; i++) {
+      cout << i << "--->";
+      list<pair<int,int>> :: iterator it;
+      for(it=adj_list[i].begin(); it!=adj_list[i].end(); ++it){
+        vertice = it->first;
+        u = it->second;
+        cout << vertice << " ";
+        cout << u << " ";
+     }
+     cout << endl;
+   }
+}
+/*
+void add_edge(list<int> adj_list[],int a, int b){
+    adj_list[a].push_back(b);
+    adj_list[b].push_back(a);
+}*/
+
+void add_edge(list<pair<int, int>> adj_list[], int a, int b, int w){
+     adj_list[a].push_back(make_pair(b,w));
+     adj_list[b].push_back(make_pair(a,w));
+}
+
+
+int main()
+{
+ int u,vertices,a,b,w;
+ cout << "Unesi broj cvorova: ";
+ cin >> vertices;
+ list<pair<int,int>> lista[vertices];
+ list<pair<int,int>> :: iterator it;
+ cout << "Unesi broj grana: ";
+ cin >> u;
+ for(int i=0; i<u; i++ ){
+  cin >> a;
+  cin >> b;
+  cin >> w;
+  add_edge(lista, a, b, w);
+ }
+ it = lista[0].begin();
+ int min = it->second;
+ int vertice1;
+ int vertice2;
+ cout << "Pocetni minimum " << min; 
+ cout << endl;
+for(int i = 0; i<vertices; i++) {
+ for(it=lista[i].begin(); it!=lista[i].end(); ++it){  
+         if(it->second < min){
+             min=it->second;
+             vertice1 = i;
+             vertice2 = it->first;
+         }
+ }
+}
+cout << "Tezina najlakse grane je: " << min;
+cout << endl;
+cout << "Grana se nalazi izmedju cvorova: " << vertice1 << " " << vertice2;   
+    
+}
