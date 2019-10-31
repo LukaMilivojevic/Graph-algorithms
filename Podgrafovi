@@ -86,7 +86,6 @@ return state;
         }
 
   printf("%d",longest[indeks]);
-
   printf("\n");
   printf("%d",indeks);
   printf("\n");
