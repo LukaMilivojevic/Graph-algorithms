@@ -1,0 +1,50 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <list>
+#include <queue>
+using namespace std;
+
+void add_edge(list<int> lista[], int a, int b){
+  lista[a].push_back(b);
+  }
+
+bool is_cyclic(list<int> graph[], int* visited, int start, vector<int> &lista){
+ visited[start]=1;
+ for(list<int>::iterator it=graph[start].begin(); it!=graph[start].end(); it++){
+     
+    if(visited[*it]==1){
+     return true;
+    }
+    if(visited[*it]==0 && is_cyclic(graph,visited,*it,lista))
+        return true;
+      }
+    lista.push_back(start);
+    visited[start]=2;
+    return false;
+}
+
+int main()
+{
+        int n,m,a,b;
+        int start=-1;
+        scanf("%d",&n);
+        scanf("%d",&m);
+        list<int> graf[n];
+        int visited[n];
+        vector<int> lista;
+        for(int i=0; i<n; i++)
+            visited[i]=0;
+        printf("GRANE");
+        for(int i=0; i<m; i++){
+            scanf("%d",&a);
+            if(start==-1)
+              start=a;
+            scanf("%d",&b);
+            add_edge(graf,a,b);
+        }
+       if(is_cyclic(graf,visited,start,lista))
+        printf("Ciklican");
+       else
+        for(int i=lista.size()-1; i >=0; i--)
+          printf("%d",lista[i]);
+}
