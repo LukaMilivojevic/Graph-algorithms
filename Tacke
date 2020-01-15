@@ -80,10 +80,6 @@ int main()
         p[i].first = c;
         p[i].second = make_pair(i,j);
     }
-    for(int i=0;i<n;i++){
-     cout << p[i].first << ' ' << p[i].second.first << ' ' << p[i].second.second; 
-     cout << '\n';
-    }
     sort(p, p + n*(n-1)/2);
     minimumCost = kruskal(p,id,n*(n-1)/2);
     cout << minimumCost << endl;
