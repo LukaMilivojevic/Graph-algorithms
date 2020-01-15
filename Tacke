@@ -1,0 +1,91 @@
+/*#include <iostream>
+#include <vector>
+#include <utility>
+#include <algorithm>
+#include <math>
+*/
+#include<bits/stdc++.h> 
+using namespace std;
+
+/*
+void initialize()
+{
+    for(int i = 0;i < MAX;++i)
+        id[i] = i;
+}
+*/
+int root(int x, int* id)
+{
+    while(id[x] != x)
+    {
+        id[x] = id[id[x]];
+        x = id[x];
+    }
+    return x;
+}
+
+void union1(int x, int y, int* id)
+{
+    int p = root(x,id);
+    int q = root(y,id);
+    id[p] = id[q];
+}
+
+float kruskal(pair<float, pair<int, int> > p[], int* id, int edges)
+{
+    int x, y;
+    float cost, minimumCost = 0;
+    for(int i = 0;i < edges;i++)
+    {
+        // Selecting edges one by one in increasing order from the beginning
+        x = p[i].second.first;
+        y = p[i].second.second;
+        cost = p[i].first;
+        // Check if the selected edge is creating a cycle or not
+       // cout << cost << '\n';
+        if(root(x,id) != root(y,id))
+        {
+            minimumCost += cost;
+            union1(x, y, id);
+        }    
+    
+       // cout << minimumCost << ' ' << x << ' ' << y << '\n';
+    }
+    return minimumCost;
+}
+
+int main()
+{
+    int x, y;
+    int n, edges;
+    float weight, cost, minimumCost;
+    cin >> n; 
+    int id[n];
+    pair<int,int> tacka[n];
+    for(int i=0; i<n; i++){
+     int a;
+     int b;
+     cin >> a >> b;
+     tacka[i].first = a;
+     tacka[i].second = b;
+    }
+    pair <float , pair<int, int> > p[n*(n-1)/2];
+    for(int i=0; i<n; i++)
+     id[i]=i;
+    for(int i=0;i<n;i++)
+    for(int j=1;j<=round((n-1)/2);j++)
+    {
+        float c;
+        c=sqrt((tacka[i].first-tacka[j].first)*(tacka[i].first-tacka[j].first)+(tacka[i].second-tacka[j].second)*(tacka[i].second-tacka[j].second));
+        p[i].first = c;
+        p[i].second = make_pair(i,j);
+    }
+    for(int i=0;i<n;i++){
+     cout << p[i].first << ' ' << p[i].second.first << ' ' << p[i].second.second; 
+     cout << '\n';
+    }
+    sort(p, p + n*(n-1)/2);
+    minimumCost = kruskal(p,id,n*(n-1)/2);
+    cout << minimumCost << endl;
+    return 0;
+}
