@@ -1,70 +1,51 @@
-#include <iostream>
-#include <vector>
-#include <utility>
-#include <algorithm>
-
+#include <bits/stdc++.h>
 using namespace std;
-const int MAX = 1e4 + 5;
-int id[MAX], nodes, edges;
-pair <long long, pair<int, int> > p[MAX];
 
-void initialize()
-{
-    for(int i = 0;i < MAX;++i)
-        id[i] = i;
-}
 
-int root(int x)
-{
-    while(id[x] != x)
-    {
-        id[x] = id[id[x]];
-        x = id[x];
+int root(int a, int* link){
+    while(link[a]!=a){
+     link[a]=link[link[a]];
+     a = link[a];
     }
-    return x;
+    return a;
 }
 
-void union1(int x, int y)
-{
-    int p = root(x);
-    int q = root(y);
-    id[p] = id[q];
+void union1(int a, int b, int* link){
+    int p = root(a, link);
+    int q = root(b, link);
+    link[p] = link[q];
 }
 
-long long kruskal(pair<long long, pair<int, int> > p[])
-{
-    int x, y;
-    long long cost, minimumCost = 0;
-    for(int i = 0;i < edges;++i)
-    {
-        // Selecting edges one by one in increasing order from the beginning
-        x = p[i].second.first;
-        y = p[i].second.second;
-        cost = p[i].first;
-        // Check if the selected edge is creating a cycle or not
-        if(root(x) != root(y))
-        {
-            minimumCost += cost;
-            union1(x, y);
-        }    
+
+float kruskal(pair<float, pair<int,int> > lista[], int *link, int edges){
+    int x,y;
+    int cost,minimum=0;
+    for(int i = 0; i<edges; i++){
+        x = lista[i].second.first;
+        y = lista[i].second.second;
+        cost = lista[i].first;
+        if(root(x,link)!=root(y,link)){
+            minimum = minimum+cost;
+            union1(x,y,link);
+        }
     }
-    return minimumCost;
+    return minimum;
 }
+
 
 int main()
 {
-    int x, y;
-    long long weight, cost, minimumCost;
-    initialize();
-    cin >> nodes >> edges;
-    for(int i = 0;i < edges;++i)
-    {
-        cin >> x >> y >> weight;
-        p[i] = make_pair(weight, make_pair(x, y));
-    }
-    // Sort the edges in the ascending order
-    sort(p, p + edges);
-    minimumCost = kruskal(p);
-    cout << minimumCost << endl;
-    return 0;
+ int n,m,a,b,w;
+ cin >> n >> m;
+ int link[n];
+ pair<float, pair<int,int> > lista[m];
+ for(int i=0; i<n; i++)
+  link[i]=i;
+ for(int i=0; i<m; i++){
+    cin >> a >> b >> w;
+    lista[i].first = w;
+    lista[i].second = make_pair(a,b);
+ }
+ sort(lista, lista + m);
+ cout << kruskal(lista,link,m);
 }
