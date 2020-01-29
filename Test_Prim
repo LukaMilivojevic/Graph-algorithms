@@ -1,0 +1,97 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int ind = 0;
+
+void add_edge(list<pair<int, int> > lista[], int a, int b, int w){
+  lista[a].push_back(make_pair(w,b));
+  lista[b].push_back(make_pair(w,a));
+ }
+
+void dfs(list<pair<int, int> > lista[], vector<int> mr[], int n, int start, int* visited, int br){
+          visited[start]=1;
+          for(auto it = lista[start].begin(); it != lista[start].end(); it++)
+           if(visited[it->second]==0){
+           dfs(lista,mr,n,it->second,visited,br);
+           }
+       mr[br].push_back(start);      
+}      
+
+
+int prim(list<pair<int,int> > lista[], int n, int x){
+    priority_queue< pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>> > pq;
+    int cost = 0;
+    int y;
+    int visited[n];
+    for(int i=0; i<n; i++)
+        visited[i]=0;
+    pq.push(make_pair(0,x));
+    while(!pq.empty()){
+        int a = pq.top().first;
+        int b = pq.top().second;
+        pq.pop();
+        if(visited[b]==1)
+            continue;
+        cost += a;
+        visited[b]=1;
+        for(auto it = lista[b].begin(); it != lista[b].end(); it++){
+        y=it->second;
+        if(visited[y]==0)
+         pq.push(make_pair(it->first,it->second));
+        }
+    }
+    return cost;
+}
+
+int main()
+{
+    int n,m,a,b,w,s;
+    int br=0;
+    cin >> n >> m;
+    int visited[n];
+    vector<int> suma;
+    vector<int> mr[n];
+    for(int i=0; i<n; i++)
+     visited[i]=0;
+    list<pair<int, int> >lista[n];
+    for(int i=0; i<m; i++)
+     {
+         cin >> a >> b >> w;
+         add_edge(lista,a,b,w);
+     }
+    for(int i=0;i<n;i++)
+        if(visited[i]==0)
+        {
+            //s=0;
+            dfs(lista,mr,n,i,visited,br);
+            br++;
+        }
+    for(int i=0; i<br; i++){
+            s=0;
+            while(!mr[i].empty())
+            {
+            int x=*mr[i].begin();
+            for(auto it =lista[x].begin(); it!=lista[x].end() ;it++)
+                if(it->first!=0)
+                    s+=it->first;
+            mr[i].erase(mr[i].begin());
+            }
+            suma.push_back(s);
+    }
+    for(vector<int> :: iterator it=suma.begin();it!=suma.end();it++)
+        printf("%d\n",*it/2);
+    
+    int s1;
+    vector<int> suma1;
+    
+    for(int i=0;i<br;i++)
+    {
+        s1=0;
+        int x=*mr[i].begin();
+        s1 = prim(lista, n, x);
+        suma1.push_back(s1);
+    }
+    printf("\n"); //Suma nakon promena
+    for(vector<int> :: iterator it=suma1.begin();it!=suma1.end();it++)
+        printf("%d\n",*it);
+}
