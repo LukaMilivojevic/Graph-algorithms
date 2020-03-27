@@ -1,0 +1,93 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<list>
+#include<queue>
+using namespace std;
+
+void add_edge(list<int> lista[], int a, int b){
+  lista[a].push_back(b);
+  lista[b].push_back(a);
+ }
+
+void ispis(list<int> lista[], int n,int start){
+
+  for(int i=start; i<n; i++){
+  printf("%d", i);
+  printf("-->");
+  for(list<int>::iterator it = lista[i].begin(); it!=lista[i].end(); it++)
+      printf("%d",*it);
+  printf("\n");
+  }
+}
+
+void DFS(list<int> lista[], int start, int* niz, int n){
+   niz[start]=1;
+   for(list<int>::iterator it = lista[start].begin(); it!=lista[start].end(); it++)
+    if(!niz[*it]){
+    printf("%d",*it);
+    DFS(lista,*it,niz,n);
+   }
+ }
+
+int BFS(list<int> lista[], int start, int*niz,int n, int* longest){
+   int levels[n];
+   int state=0;
+   int temp=0;
+   queue<int> wait;
+    for(int i=0; i<n; i++)
+    if(niz[i]==0){
+            wait.push(i);
+            niz[i]=1;
+            printf("%d",i);
+   while(!wait.empty()){
+   for(list<int>::iterator it = lista[wait.front()].begin(); it!=lista[wait.front()].end(); it++)
+    if(!niz[*it]){
+    niz[*it]=1;
+    levels[*it]=levels[wait.front()]+1;
+    temp=levels[*it];
+    printf("%d",*it);//,levels[*it]);
+    wait.push(*it);
+   }
+   wait.pop();
+  }
+  state++;
+  longest[i]=temp;
+  printf("\n");
+}
+return state;
+}
+
+ int main(){
+  int n,a,b,m;
+  printf("Broj cvorova i grana ");
+  scanf("%d%d",&n,&m);
+  list<int> lista[n];
+  for(int i=0; i<m; i++){
+    scanf("%d%d", &a,&b);
+    add_edge(lista,a,b);
+  }
+  //ispis(lista,n);
+  int niz_posecenih[n];
+  int longest[n];
+
+  for(int i=0; i<n; i++){
+    niz_posecenih[i]=0;
+    longest[i]=0;
+  }
+
+  printf("BROJ PODGRAFOVA: %d", BFS(lista,0,niz_posecenih,n,longest));
+  printf("\n");
+  int maks=0;
+  int indeks=-1;
+  for(int i=0; i<n; i++)
+      if(longest[i]>maks){
+        indeks=i;
+        maks=longest[i];
+        }
+
+  printf("%d",longest[indeks]);
+  printf("\n");
+  printf("%d",indeks);
+  printf("\n");
+  return 0;
+ }

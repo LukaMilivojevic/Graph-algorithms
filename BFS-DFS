@@ -1,0 +1,81 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <list>
+#include <iterator>
+using namespace std;
+
+void print_graph(list<int> lista[], int number_of_nodes){
+  list<int> :: iterator it;
+  for(int i=0; i < number_of_nodes; i++){
+    printf("%d",i);
+    printf(" --> ");
+    for(it = lista[i].begin(); it != lista[i].end(); ++it){
+      printf("%d",*it);
+      }
+      printf("\n");
+     }
+}
+
+void add_edge(list<int> lista[],int a, int b){
+  lista[a].push_back(b);
+  lista[b].push_back(a);
+}
+
+void BFS(list<int> lista[], int nodes, int start){
+
+ int niz_poseceni[nodes];
+ int red_cekanja[nodes];
+ int leva=0;
+ int desna=0;
+
+ for(int i=0; i<nodes; i++)
+    niz_poseceni[i]=0;
+
+ niz_poseceni[start] = 1;
+ red_cekanja[0] = start;
+
+ while(leva<=desna){
+
+    for(list<int> :: iterator it = lista[red_cekanja[leva]].begin(); it != lista[red_cekanja[leva]].end(); it++)
+    if(!niz_poseceni[*it]){
+        niz_poseceni[*it] = 1;
+        red_cekanja[++desna] = *it;
+        printf(" %d", *it);
+    }
+    leva++;
+ }
+
+}
+
+ void DFS(list<int> lista[], int start, int *poseceni){
+  poseceni[start]=1;
+  for(list<int> :: iterator it = lista[start].begin(); it != lista[start].end(); it++){
+    if(!poseceni[*it]){
+        printf(" %d", *it);
+        DFS(lista, *it, poseceni);
+    }
+  }
+  }
+
+int main()
+{
+    int nodes,edges,a,b;
+    printf("Enter nodes");
+    scanf("%d", &nodes);
+    int p[nodes];
+    for(int i=0; i<nodes; i++)
+        p[i]=0;
+    printf("Enter edges");
+    scanf("%d", &edges);
+
+    list<int> lista[nodes];
+    for(int i=0; i<edges; i++){
+        scanf("%d%d",&a,&b);
+        add_edge(lista,a,b);
+    }
+
+    //print_graph(lista,nodes);
+    DFS(lista, 0, p);
+
+    return 0;
+}

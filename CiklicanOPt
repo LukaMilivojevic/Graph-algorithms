@@ -1,0 +1,131 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <list>
+#include <queue>
+using namespace std;
+
+void output(list<int> lista[],int n){
+
+  for(int i=0; i<n; i++){
+     printf("%d --> ",i);
+     for(list<int>::iterator it=lista[i].begin(); it!=lista[i].end(); it++)
+      printf("%d",*it);
+    printf("\n");
+  }
+  }
+
+void add_edge(list<int> lista[], int a, int b){
+  lista[a].push_back(b);
+  }
+
+void DFS(list<int> graph[], int* visited, int start){
+  visited[start]=1;
+  for(list<int>::iterator it=graph[start].begin(); it!=graph[start].end(); it++)
+     if(!visited[*it]){
+       // printf("%d",*it);
+        DFS(graph,visited,*it);
+     }
+ }
+
+int find_start(list<int> graph[], int* visited, int n){
+    int v;
+    for(int i=0; i<n; i++)
+       if(visited[i]==0){
+          DFS(graph,visited,i);
+          v=i;
+       }
+    for(int i=0; i<n; i++)
+        visited[i]=0;
+    DFS(graph,visited,v);
+    for (int i=0; i<n; i++)
+        if (visited[i] == 0)
+            return -1;
+       return v;
+}
+
+void BFS(list<int> graph[], int n, int start){
+int br=0;
+int visited[n];
+for(int i=0; i<n; i++)
+    visited[i]=0;
+queue<int> wait;
+wait.push(start);
+visited[start]=1;
+
+while(!wait.empty()){
+ for(list<int>::iterator it=graph[wait.front()].begin(); it!=graph[wait.front()].end(); it++)
+  if(!visited[*it]){
+     printf("%d",*it);
+     visited[*it]=1;
+     wait.push(*it);
+   }
+ wait.pop();
+ }
+}
+
+
+bool is_cyclic(list<int> graph[], int* visited, int start){
+ visited[start]=1;
+
+
+ for(list<int>::iterator it=graph[start].begin(); it!=graph[start].end(); it++){
+    if(visited[*it]==1){
+     return true;
+    }
+    if(visited[*it]==0 && is_cyclic(graph,visited,*it))
+        return true;
+      }
+
+    visited[start]=2;
+    return false;
+}
+
+
+
+
+
+int main()
+{
+        int n,m,a,b;
+        int start=-1;
+        scanf("%d",&n);
+        scanf("%d",&m);
+        list<int> graf[n];
+        int visited[n];
+        int visiteddfs[n];
+        for(int i=0; i<n; i++){
+            visited[i]=0;
+            visiteddfs[i]=0;
+        }
+        printf("GRANE");
+        for(int i=0; i<m; i++){
+            scanf("%d",&a);
+            if(start==-1)
+              start=a;
+            scanf("%d",&b);
+            add_edge(graf,a,b);
+        }
+       output(graf,n);
+
+/*       if(!is_cyclic(graf,visited,start)){
+        for(int i=0; i<n; i++)
+          if(BFS(graf,n,i)==n-1){
+            start=i;
+            break;
+                 }
+          printf("%d",start);
+          DFS(graf,visiteddfs,start);
+       }
+       else
+        printf("Ciklican");
+  */
+    // printf("%d",find_start(graf,visited,n));
+     if(!is_cyclic(graf,visited,start)){
+            start = find_start(graf,visiteddfs,n);
+            printf("%d",start);
+            BFS(graf,n,start);
+     }
+     else
+        printf("Ciklican");
+  return 0;
+}
